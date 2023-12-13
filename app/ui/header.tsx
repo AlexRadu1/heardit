@@ -1,3 +1,3 @@
 export default function Header() {
-  return <div className="h-16 bg-gray-900 flex ">hello</div>;
+  return <div className="flex h-16 bg-gray-900 ">hello</div>;
 }
