@@ -11,19 +11,11 @@ datasource db {
   relationMode = "prisma"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
-}
-
 model Post {
   id        Int     @id @default(autoincrement())
   title     String
   link      String
   content   String?
   published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  String  @unique
 }
