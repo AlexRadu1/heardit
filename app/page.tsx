@@ -1,7 +1,13 @@
-export default function Home() {
+import { currentUser } from "@clerk/nextjs";
+
+export default async function Home() {
+  const user = await currentUser();
+
+  console.log(user);
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between">
-      <main className="flex h-full w-full items-start justify-center bg-gray-900"></main>
+    <div className="flex flex-col items-center justify-between p-4">
+      <main className="flex h-full w-full items-start justify-center"></main>
     </div>
   );
 }
