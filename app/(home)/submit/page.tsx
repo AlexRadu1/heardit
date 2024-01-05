@@ -1,9 +1,11 @@
-import { currentUser } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
+import React from "react";
 
-export default function SubmitPage() {
-  const user = currentUser();
-
-  function createPost() {}
+export default async function SubmitPage() {
+  // const { userId }: { userId: string | null } = auth();
+  // async function createPost() {
+  //   console.log(userId);
+  // }
 
   return (
     <div className="p-4">

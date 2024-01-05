@@ -72,7 +72,7 @@ function Header() {
         </SignedIn>
         <SignedOut>
           {/* Signed out users get sign in button */}
-          <ClerkLoading>
+          {/* <ClerkLoading>
             <div role="status">
               <svg
                 aria-hidden="true"
@@ -92,10 +92,10 @@ function Header() {
               </svg>
               <span className="sr-only">Loading...</span>
             </div>
-          </ClerkLoading>
-          <ClerkLoaded>
-            <SignInButton />
-          </ClerkLoaded>
+          </ClerkLoading> */}
+          {/* <ClerkLoaded> */}
+          <SignInButton />
+          {/* </ClerkLoaded> */}
         </SignedOut>
       </div>
     </div>
