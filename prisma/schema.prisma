@@ -6,16 +6,15 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  link      String
-  content   String?
-  published Boolean @default(false)
-  authorId  String  @unique
+  id       Int     @id @default(autoincrement())
+  title    String
+  link     String
+  content  String?
+  authorId String
 }

@@ -26,7 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env.local
 .env
 todo.md
 
@@ -40,3 +39,5 @@ next-env.d.ts
 
 # Contentlayer
 .contentlayer
+
+.vercel

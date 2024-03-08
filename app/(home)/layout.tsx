@@ -13,12 +13,16 @@ import {
 } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import Link from "next/link";
+import Script from "next/script";
+import { cn } from "../lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+import { ThemeProvider } from "@/app/components/providers";
+
+const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Home",
-  description: "Homepage for heardit, a platofrm to share and discuss music!",
+  description: "Homepage for heardit, a platform to share and discuss music!",
 };
 
 function Header() {
@@ -93,9 +97,29 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body className={inter.className}>
-          <Header />
-          {children}
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            fontSans.variable,
+          )}
+        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            {children}
+            {/* <Script
+            src="https://open.spotify.com/embed/iframe-api/v1"
+            strategy="beforeInteractive"
+          /> */}
+            {/* <Script
+            src="https://sdk.scdn.co/spotify-player.js"
+            strategy="afterInteractive"
+          /> */}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
