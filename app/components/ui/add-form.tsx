@@ -1,7 +1,12 @@
 "use client";
 
-// import { SubmitBtn } from "./submitButton";
+import { ButtonDemo } from "./submitButton";
 import { handleForm } from "../../(home)/submit/actions";
+import { z } from "zod";
+
+const formSchema = z.object({
+  username: z.string().min(2).max(50),
+});
 
 export function AddFrom() {
   return (
@@ -41,7 +46,7 @@ export function AddFrom() {
         className="rounded-md  p-2 text-slate-950 shadow-sm"
       />
       <div className="flex w-full items-center justify-center pt-2">
-        {/* <SubmitBtn /> */}
+        <ButtonDemo />
       </div>
     </form>
   );

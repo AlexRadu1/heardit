@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import {
-  ClerkProvider,
   SignInButton,
   SignedIn,
   SignedOut,
@@ -11,12 +10,13 @@ import {
   ClerkLoading,
   SignUpButton,
 } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
+import { ClerkProvider } from "@/app/components/clerk-provider";
 import Link from "next/link";
 import Script from "next/script";
 import { cn } from "../lib/utils";
 
-import { ThemeProvider } from "@/app/components/providers";
+import { ThemeProvider } from "@/app/components/theme-provider";
+import { ModeToggle } from "../components/ui/themeToggle";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -49,6 +49,7 @@ function Header() {
             />
           </svg>
         </Link>
+        <ModeToggle />
         <SignedIn>
           <ClerkLoading>
             <div role="status">
@@ -91,37 +92,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: dark,
-      }}
-    >
-      <html lang="en">
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable,
-          )}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+        )}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ClerkProvider>
             <Header />
             {children}
-            {/* <Script
-            src="https://open.spotify.com/embed/iframe-api/v1"
-            strategy="beforeInteractive"
-          /> */}
-            {/* <Script
-            src="https://sdk.scdn.co/spotify-player.js"
-            strategy="afterInteractive"
-          /> */}
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          </ClerkProvider>
+        </ThemeProvider>
+        <Script
+          src="https://sdk.scdn.co/spotify-player.js"
+          strategy="beforeInteractive"
+        />
+      </body>
+    </html>
   );
 }

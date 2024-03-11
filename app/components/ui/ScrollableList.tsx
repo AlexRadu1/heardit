@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Post } from "@prisma/client";
 import {
   Card,
@@ -24,17 +24,11 @@ export default function ScrollableList({
   const observer = useRef<IntersectionObserver | null>(null);
   const spotifyPlayerId = useRef<string | null>(null);
   const [currentTrack, setTrack] = useState<Track>();
+  const [volumeState, setVolumeState] = useState<number>();
 
   useEffect(() => {
     if (token !== undefined) {
       // If the Spotify Web Playback SDK is already loaded and available when this component mounts
-      if (!window.Spotify) {
-        const scriptTag = document.createElement("script");
-        scriptTag.src = "https://sdk.scdn.co/spotify-player.js";
-
-        document.head!.appendChild(scriptTag);
-        console.log("Script loaded");
-      }
       if (window.Spotify) {
         player.current = new Spotify.Player({
           name: "Web Playback SDK",
@@ -80,14 +74,18 @@ export default function ScrollableList({
           }
           setTrack(state.track_window.current_track);
         });
+        player.current!.getVolume().then((volume: number) => {
+          setVolumeState(volume * 100);
+          // console.log(`The volume of the player is ${volumeState}%`);
+        });
       }
 
       return () => {
         player.current?.disconnect();
-        // setIsReady(false);
+        setIsReady(false);
       };
     }
-  }, [isReady]);
+  }, [isReady, token]);
 
   useEffect(() => {
     // Intersection Observer callback function
@@ -128,7 +126,7 @@ export default function ScrollableList({
         observer.current.disconnect();
       }
     };
-  }, []);
+  });
 
   const cards = posts.map((post: Post) => {
     const url = new URL(post.link);
