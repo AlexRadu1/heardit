@@ -1,5 +1,4 @@
 import "../(home)/globals.css";
-import { ClerkProvider } from "@/app/components/clerk-provider";
 import { ThemeProvider } from "@/app/components/theme-provider";
 
 export const metadata = {
@@ -21,7 +20,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ClerkProvider>{children}</ClerkProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>
