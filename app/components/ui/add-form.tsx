@@ -1,53 +1,170 @@
 "use client";
-
-import { ButtonDemo } from "./submitButton";
-import { handleForm } from "../../(home)/submit/actions";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/app/components/ui/form";
 
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
+import { Label } from "@/app/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/app/components/ui/radio-group";
+import Image from "next/image";
+import { Input } from "@/app/components/ui/input";
+import { useDebouncedCallback } from "use-debounce";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Separator } from "@/app/components/ui/separator";
+import { Textarea } from "@/app/components/ui/textarea";
+import { ScrollArea } from "./scroll-area";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { env } from "@/app/utils/env";
+
+type Artist = {
+  external_urls: {
+    spotify: "string";
+  };
+  href: "string";
+  id: "string";
+  name: "string";
+  type: "artist";
+  uri: "string";
+};
+
+export const formSchema = z.object({
+  title: z.string().min(2).max(50),
 });
 
-export function AddFrom() {
-  return (
-    <form
-      className="flex  w-full flex-col gap-2 md:max-w-3xl"
-      action={handleForm}
-    >
-      <label htmlFor="title">Post title</label>
-      <input
-        type="text"
-        name="title"
-        id="title"
-        className="rounded-md  p-2 text-slate-950 shadow-sm"
-      />
-      <div className=" ">
-        <label htmlFor="website-url" className="block py-2 text-gray-500">
-          Website URL
-        </label>
-        <div className="flex items-center rounded-md border text-gray-400">
-          <div className="rounded-l-md border-r bg-gray-50 px-3 py-2.5">
-            https://
-          </div>
-          <input
-            type="text"
-            name="link"
-            placeholder="www.example.com"
-            id="website-url"
-            className="ml-2 w-full bg-transparent p-2.5 outline-none"
+export function AddFrom({ token }: { token: string }) {
+  const [searchResults, setSearchResults] = useState("");
+  const [queryResults, setQueryResults] = useState();
+  const [searchType, setSearchType] = useState("track");
+  const [inputChanged, setInputChanged] = useState(false);
+  const [searchTypeChanged, setSearchTypeChanged] = useState(false);
+  const handleChange = useDebouncedCallback((term) => {
+    setSearchResults(term);
+    setInputChanged(true);
+  }, 300);
+
+  useEffect(() => {
+    if (inputChanged || searchTypeChanged) {
+      // Only run the effect if inputChanged is true
+      const encodedQuery = encodeURIComponent(searchResults);
+      axios
+        .get(
+          `https://api.spotify.com/v1/search?q=${encodedQuery}&type=${searchType}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then((response) => {
+          if (response.status !== 200) {
+            throw new Error("Network response was not ok");
+          }
+          setQueryResults(response.data);
+          // console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        })
+        .finally(() => {
+          setSearchTypeChanged(false);
+          setInputChanged(false); // Reset inputChanged after the request is made
+        });
+    }
+  }, [searchResults, token, inputChanged]);
+
+  const SongList = () => {
+    if (queryResults) {
+      console.log(queryResults);
+
+      const songList = queryResults.tracks.items.map((song) => (
+        <div key={song.id} className="flex items-center space-x-4">
+          <Image
+            height={64}
+            width={64}
+            alt="Song cover"
+            src={song.album.images[0].url}
           />
+          <div className="space-y-1.5">
+            <h3 className="text-lg font-medium">{song.name}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              by{" "}
+              {song.artists.map((artist: Artist) => {
+                return `${artist.name}\n `;
+              })}
+            </p>
+            <Separator className="my-2" />
+          </div>
+        </div>
+      ));
+
+      return <div className="flex flex-col gap-4 pt-4">{songList}</div>;
+    }
+  };
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+    },
+  });
+
+  return (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-bold">Request a song</h2>
+        <p className="text-gray-500 dark:text-gray-400">
+          Enter the name of the song you want to request.
+        </p>
+      </div>
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label className="sr-only text-center">Song</Label>
         </div>
       </div>
-      <label htmlFor="desc">Post description</label>
-      <input
-        type="text"
-        name="desc"
-        id="desc"
-        className="rounded-md  p-2 text-slate-950 shadow-sm"
-      />
-      <div className="flex w-full items-center justify-center pt-2">
-        <ButtonDemo />
-      </div>
-    </form>
+      <Form {...form}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            console.log("submited...");
+          }}
+          className="space-y-8"
+        >
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                {/* <FormLabel className=" text-center">Song results</FormLabel> */}
+
+                <FormControl>
+                  <ScrollArea className="h-72 w-full rounded-md border ">
+                    <div className="p-4">
+                      <Input
+                        placeholder="Enter the name of the song"
+                        onChangeCapture={(e) =>
+                          handleChange(e.currentTarget.value)
+                        }
+                      />
+                      <SongList />
+                    </div>
+                  </ScrollArea>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+      <Separator className="border-gray-200 dark:border-gray-800" />
+    </div>
   );
 }

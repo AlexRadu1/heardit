@@ -1,6 +1,6 @@
 import "../(home)/globals.css";
 import { ClerkProvider } from "@/app/components/clerk-provider";
-import { ThemeProvider } from "../components/theme-provider";
+import { ThemeProvider } from "@/app/components/theme-provider";
 
 export const metadata = {
   title: "Authentication",
