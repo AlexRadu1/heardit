@@ -50,6 +50,7 @@ model Posts {
   title   String
   likes   Int
   songUrl String
+  content String?
   User    User?   @relation(fields: [userId], references: [id])
   userId  String?
 }

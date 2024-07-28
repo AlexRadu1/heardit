@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import type { Post } from "@prisma/client";
+import type { Posts } from "@prisma/client";
 import {
   Card,
   CardContent,
@@ -17,7 +17,7 @@ export default function ScrollableList({
   posts,
 }: {
   token?: string;
-  posts: Post[];
+  posts: Posts[];
 }) {
   let [isReady, setIsReady] = useState(false);
   let player = useRef<Spotify.Player | undefined>(undefined);
@@ -128,8 +128,8 @@ export default function ScrollableList({
     };
   });
 
-  const cards = posts.map((post: Post) => {
-    const url = new URL(post.link);
+  const cards = posts.map((post: Posts) => {
+    const url = new URL(post.songUrl);
     const trackID = url.pathname.split("/").pop();
     return (
       <Card

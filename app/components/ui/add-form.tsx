@@ -81,34 +81,34 @@ export function AddFrom({ token }: { token: string }) {
     }
   }, [searchResults, token, inputChanged]);
 
-  const SongList = () => {
-    if (queryResults) {
-      console.log(queryResults);
+  // const SongList = () => {
+  //   if (queryResults) {
+  //     console.log(queryResults);
 
-      const songList = queryResults.tracks.items.map((song) => (
-        <div key={song.id} className="flex items-center space-x-4">
-          <Image
-            height={64}
-            width={64}
-            alt="Song cover"
-            src={song.album.images[0].url}
-          />
-          <div className="space-y-1.5">
-            <h3 className="text-lg font-medium">{song.name}</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              by{" "}
-              {song.artists.map((artist: Artist) => {
-                return `${artist.name}\n `;
-              })}
-            </p>
-            <Separator className="my-2" />
-          </div>
-        </div>
-      ));
+  //     const songList = queryResults.tracks.items.map((song) => (
+  //       <div key={song.id} className="flex items-center space-x-4">
+  //         <Image
+  //           height={64}
+  //           width={64}
+  //           alt="Song cover"
+  //           src={song.album.images[0].url}
+  //         />
+  //         <div className="space-y-1.5">
+  //           <h3 className="text-lg font-medium">{song.name}</h3>
+  //           <p className="text-sm text-gray-500 dark:text-gray-400">
+  //             by{" "}
+  //             {song.artists.map((artist: Artist) => {
+  //               return `${artist.name}\n `;
+  //             })}
+  //           </p>
+  //           <Separator className="my-2" />
+  //         </div>
+  //       </div>
+  //     ));
 
-      return <div className="flex flex-col gap-4 pt-4">{songList}</div>;
-    }
-  };
+  //     return <div className="flex flex-col gap-4 pt-4">{songList}</div>;
+  //   }
+  // };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -154,7 +154,7 @@ export function AddFrom({ token }: { token: string }) {
                           handleChange(e.currentTarget.value)
                         }
                       />
-                      <SongList />
+                      {/* <SongList /> */}
                     </div>
                   </ScrollArea>
                 </FormControl>
