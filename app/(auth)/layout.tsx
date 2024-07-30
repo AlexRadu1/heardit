@@ -1,5 +1,5 @@
 import "../(home)/globals.css";
-import { ThemeProvider } from "@/app/components/theme-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata = {
   title: "Authentication",

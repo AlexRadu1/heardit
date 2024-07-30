@@ -1,4 +1,4 @@
-import { AddFrom } from "../../components/ui/add-form";
+import { AddFrom } from "../../../components/add-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

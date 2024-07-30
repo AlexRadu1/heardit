@@ -1,4 +1,4 @@
-import ScrollableList from "../components/ui/ScrollableList";
+import ScrollableList from "../../components/ScrollableList";
 
 export default async function Home() {
   return (
