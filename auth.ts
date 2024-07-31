@@ -4,8 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 import Credential from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
-
-import Google from "next-auth/providers/Google";
+import Google from "next-auth/providers/google";
 import Spotify from "next-auth/providers/spotify";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "./data/user";
