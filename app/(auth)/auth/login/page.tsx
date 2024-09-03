@@ -5,7 +5,6 @@ export default async function LoginPage() {
   const session = await auth();
   return (
     <div>
-      {JSON.stringify(session)}
       <LoginForm />
     </div>
   );

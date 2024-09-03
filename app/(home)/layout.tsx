@@ -6,7 +6,7 @@ import Script from "next/script";
 import { cn } from "../../lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "../../components/themeToggle";
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { Session } from "next-auth";
 import { Button } from "@/components/ui/button";
 import { LoginButton } from "@/components/auth/login-button";
@@ -30,23 +30,39 @@ function Header({ session }: SessionProps) {
       </div>
       <div className="flex items-center justify-center gap-2">
         {session ? (
-          <Link href={"/submit"} title="Create post" aria-label="Create post">
-            <svg
-              className="h-6 w-6 text-gray-800 dark:text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 18 18"
+          <div className="flex ">
+            <Link
+              href={"/submit"}
+              title="Create post"
+              aria-label="Create post"
+              className="p-2"
             >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 1v16M1 9h16"
-              />
-            </svg>
-          </Link>
+              <svg
+                className="h-6 w-6 text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 18 18"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 1v16M1 9h16"
+                />
+              </svg>
+            </Link>
+            <form
+              action={async () => {
+                "use server";
+                await signOut();
+              }}
+              className="flex"
+            >
+              <button type="submit">Sign out</button>
+            </form>
+          </div>
         ) : (
           <LoginButton>
             <Button variant="secondary">Login</Button>
